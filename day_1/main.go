@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"os"
 )
+
 func main() {
-	position, err := NotQuiteLisp2("input.txt")
+	s := ScanFile("input.txt")
+	position, err := NotQuiteLisp(s)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -15,69 +17,55 @@ func main() {
 }
 
 // NotQuiteLisp function calculates the position based on the content of the specified file
-func NotQuiteLisp(filename string) (int, error) {
+func NotQuiteLisp(content string) (int, error) {
 	countup := 0
 	countdown := 0
 	position := 0
-
-	file, err := os.Open(filename)
-	if err != nil {
-		return 0, fmt.Errorf("error opening file: %w", err)
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		input := scanner.Text()
-		for _, char := range input {
-			if char == '(' {
-				countup++
-			} else if char == ')' {
-				countdown++
-			}
-			position = countup - countdown
+	for _, char := range content {
+		if char == '(' {
+			countup++
+		} else if char == ')' {
+			countdown++
 		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		return 0, fmt.Errorf("error reading file: %w", err)
+		position = countup - countdown
 	}
 
 	return position, nil
 }
 
-
-
-func NotQuiteLisp2(filename string) (int, error) {
+func NotQuiteLisp2(content string) (int, error) {
 	countup := 0
 	countdown := 0
 	position := 0
+	for i, char := range content {
+		if char == '(' {
+			countup++
+		} else if char == ')' {
+			countdown++
+		}
+		if countdown > countup {
+			position = i + 1
+			break
+		}
+	}
 
+	return position, nil
+}
+
+func ScanFile(filename string) string {
 	file, err := os.Open(filename)
+	result := ""
 	if err != nil {
-		return 0, fmt.Errorf("error opening file: %w", err)
+		return "error opening file"
 	}
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		input := scanner.Text()
-		for i, char := range input {
-			if char == '(' {
-				countup++
-			} else if char == ')' {
-				countdown++
-			}
-			if countdown > countup {
-				position = i + 1
-				break
-			}
-		}
+		result = scanner.Text()
 	}
-
 	if err := scanner.Err(); err != nil {
-		return 0, fmt.Errorf("error reading file: %w", err)
+		return "error scanning file"
 	}
-
-	return position, nil
+	return result
 }
