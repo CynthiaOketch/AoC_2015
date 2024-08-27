@@ -2,13 +2,14 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"os"
 )
 
 func main() {
 	s := ScanFile("input.txt")
-	position, err := NotQuiteLisp(s)
+	position, err := NotQuiteLisp2(s)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -26,6 +27,8 @@ func NotQuiteLisp(content string) (int, error) {
 			countup++
 		} else if char == ')' {
 			countdown++
+		} else {
+			return 0, errors.New("invalid character")
 		}
 		position = countup - countdown
 	}
@@ -42,6 +45,8 @@ func NotQuiteLisp2(content string) (int, error) {
 			countup++
 		} else if char == ')' {
 			countdown++
+		} else {
+			return 0, errors.New("invalid character")
 		}
 		if countdown > countup {
 			position = i + 1
