@@ -63,12 +63,16 @@ func main() {
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
-	niceCount := 0
+	niceCount1 := 0
+	niceCount2 := 0
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		if isNice(line) {
-			niceCount++
+		if isNice1(line) {
+			niceCount1++
+		}
+		if isNice2(line) {
+			niceCount2++
 		}
 	}
 
@@ -77,11 +81,12 @@ func main() {
 		return
 	}
 
-	fmt.Printf("Number of nice strings: %d\n", niceCount)
+	fmt.Printf("Number of nice strings for part 1: %d\n", niceCount1)
+	fmt.Printf("Number of nice strings for part 2: %d\n", niceCount2)
 }
 
 // Helper function to check if a string is nice
-func isNice(s string) bool {
+func isNice2(s string) bool {
 	return hasPair(s) && hasRepeatWithOneBetween(s)
 }
 
